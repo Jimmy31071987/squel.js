@@ -3,6 +3,5 @@ squel.js
 
 Introduction
 -------------
-Framework to design javascript on a query basis.
-
+Javascript framework to reduce a lot of heavy and untidy javascript work
 

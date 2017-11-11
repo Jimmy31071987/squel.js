@@ -13,7 +13,10 @@ function squel() {
 
     this.getItem = getitemByPropertyValue;
     this.getItemContains = getItemContainsPropertyValue;
-     this.Insert = InsertItem;
+    this.Insert = InsertItem;
+    this.Update = UpdateItem;
+    this.Delete = DeleteItem;
+    this.Sort = SortList;
     
     function getItemContainsPropertyValue(list, propertyKey, propertyValue, caseInsensitive=false) {
         this.Result = [];
@@ -180,6 +183,100 @@ function squel() {
         }
         return list;
     }
+    
+    function UpdateItem(list, item, uniqueKey) {
+
+        if (uniqueKey == null || uniqueKey == 'undefined' || uniqueKey == '') {
+            throw "uniqueKey is missing";
+        }
+
+        if (list != null && list != 'undefined' && list != "null") {
+
+            var IsPropertyExists = false;
+            var IsPropertyValueExists = false;
+
+            for (var itemprop in item) {
+
+                if (itemprop == uniqueKey) {
+
+                    for (var i = 0; i < list.length; i++) {
+
+                        if (list[i] != null) {
+
+                            for (var prop in list[i]) {
+
+                                if (prop == uniqueKey) {
+
+                                    if (list[i][prop] == item[itemprop]) {
+                                        list[i] = item;
+                                        return list;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function DeleteItem(list, item, uniqueKey) {
+        if (uniqueKey == null || uniqueKey == 'undefined' || uniqueKey == '') {
+            throw "uniqueKey is missing";
+        }
+
+        if (list != null && list != 'undefined' && list != "null") {
+
+            var IsPropertyExists = false;
+            var IsPropertyValueExists = false;
+
+            for (var itemprop in item) {
+
+                if (itemprop == uniqueKey) {
+
+                    for (var i = 0; i < list.length; i++) {
+
+                        if (list[i] != null) {
+
+                            for (var prop in list[i]) {
+
+                                if (prop == uniqueKey) {
+
+                                    if (list[i][prop] == item[itemprop]) {
+                                        list.splice(i, 1);
+                                        return list;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function SortList(list, propertyKey, OrderDescByValue=false) {
+ 
+
+        if (propertyKey == null || propertyKey == 'undefined' || propertyKey == '') {
+            throw "property is missing";
+        }
+
+        if (list != null && list != 'undefined' && list != "null") {
+
+            list = list.sort(function (a, b) {
+                var x = a[propertyKey]; var y = b[propertyKey];
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            });
+        }
+
+        if (OrderDescByValue && list!=null) {
+            list.reverse();
+        }
+        return list;
+    }
+
+
 }
 
 var Result = new squel().getItem([{ username: "Jim", password: "JimPass" }, { username: "Adam", password: "AdamPass" }, { username: "Rich", password: "RichPass" }], "password", "RichPass");
@@ -191,3 +288,9 @@ console.log(Result);
 Result = new squel().Insert([{ username: "Jim", password: "JimPass" }, { username: "Adam", password: "AdamPass" }, { username: "Rich", password: "RichPass" }], { username: "Michael", password: "MichaelPass" });
 Result = new squel().getItemContains(Result, "password", "M", false);
 console.log(Result);
+
+Result = new squel().Sort(Result, "username", true);
+console.log(Result);
+Result = new squel().Delete(Result, Result[3], "username");
+console.log(Result);
+

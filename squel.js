@@ -8,8 +8,12 @@ Email :jimmy31071987@gmail.com
  */
 function squel() {
 
+    var arrayConstructor = [].constructor;
+    var objectConstructor = {}.constructor;
+
     this.getItem = getitemByPropertyValue;
     this.getItemContains = getItemContainsPropertyValue;
+     this.Insert = InsertItem;
     
     function getItemContainsPropertyValue(list, propertyKey, propertyValue, caseInsensitive=false) {
         this.Result = [];
@@ -105,6 +109,77 @@ function squel() {
         }
         return this.Result;
     }
+    
+    function JSONToArray(list) {
+
+        if (list.constructor === arrayConstructor) {
+            return list;
+        }
+        else if (list.constructor === objectConstructor) {
+            return JSON.parse(list);
+        }
+    }
+
+    function ARRAYToJSON(list) {
+
+        if (list.constructor === arrayConstructor) {
+            if (list.length > 0) {
+              
+                if (list[0].constructor != objectConstructor) {
+                     return JSON.stringify(list);
+                }
+                else {
+                    return (list);
+                }
+            }
+        }
+        else if (list.constructor === objectConstructor) {
+            return (list);
+        }
+    }
+
+    function InsertItem(list, item) {
+
+        if (list == null || list == 'undefined' || list == "") {
+            list = {};
+        }
+        
+        if (item != null) {
+
+            if (item.constructor === arrayConstructor) {
+                list = JSONToArray(list);
+
+            }
+            if (item.constructor === objectConstructor) {
+               
+                list = ARRAYToJSON(list);
+            }
+
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i] != null) {
+
+                        for (var itemprop in item) {
+
+                            var doesExist = false;
+
+                            for (var prop in list[i]) {
+                                if (itemprop == prop) {
+                                    doesExist = true;
+                                }
+                            }
+
+                            if (!doesExist) {
+                                throw "" + itemprop + " property doesn't exists in list";
+                            }
+                        }
+                    }
+                    break;
+                }
+
+                list.push(item);
+        }
+        return list;
+    }
 }
 
 var Result = new squel().getItem([{ username: "Jim", password: "JimPass" }, { username: "Adam", password: "AdamPass" }, { username: "Rich", password: "RichPass" }], "password", "RichPass");
@@ -112,3 +187,7 @@ console.log(Result);
 Result = new squel().getItemContains([{ username: "Jim", password: "JimPass" }, { username: "Adam", password: "AdamPass" }, { username: "Rich", password: "RichPass" }], "password", "JIM",true);
 console.log(Result);
 
+
+Result = new squel().Insert([{ username: "Jim", password: "JimPass" }, { username: "Adam", password: "AdamPass" }, { username: "Rich", password: "RichPass" }], { username: "Michael", password: "MichaelPass" });
+Result = new squel().getItemContains(Result, "password", "M", false);
+console.log(Result);

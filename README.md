@@ -1,4 +1,4 @@
-squel.js
+sequel.js
 ========
 
 Introduction

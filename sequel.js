@@ -278,19 +278,5 @@ function sequel() {
 
 
 }
-
-var Result = new sequel().getItem([{ username: "Jim", password: "JimPass" }, { username: "Adam", password: "AdamPass" }, { username: "Rich", password: "RichPass" }], "password", "RichPass");
-console.log(Result);
-Result = new sequel().getItemContains([{ username: "Jim", password: "JimPass" }, { username: "Adam", password: "AdamPass" }, { username: "Rich", password: "RichPass" }], "password", "JIM",true);
-console.log(Result);
-
-
-Result = new sequel().Insert([{ username: "Jim", password: "JimPass" }, { username: "Adam", password: "AdamPass" }, { username: "Rich", password: "RichPass" }], { username: "Michael", password: "MichaelPass" });
-Result = new sequel().getItemContains(Result, "password", "M", false);
-console.log(Result);
-
-Result = new sequel().Sort(Result, "username", true);
-console.log(Result);
-Result = new sequel().Delete(Result, Result[3], "username");
-console.log(Result);
+ 
 
